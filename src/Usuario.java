@@ -3,9 +3,9 @@ public class Usuario {
     private String password;
     private String nombre;
 
-    public Usuario(String password, String username, String nombre) {
-        this.password = password;
+    public Usuario(String username,String password, String nombre) {
         this.username = username;
+        this.password = password;
         this.nombre = nombre;
     }
 

@@ -101,7 +101,7 @@ public class Ruleta {
         System.out.println("Numero obtenido: " + numero);
         System.out.println("Tu apuesta fue: " + tipo + " con monto $" + monto);
         if (acierto) {
-            System.out.println("Ganaste:");
+            System.out.println("Ganaste");
         } else {
             System.out.println("Perdiste");
         }

@@ -16,28 +16,38 @@ public class VentanaLogin {
 
     public VentanaLogin() {
 
-        frame. setSize(400, 300);
+
+
+    }
+
+    private void inicializarUsuarios() {
+        USUARIOS.add(new Usuario("daniel", "1111", "Daniel Lincopi"))
+    }
+
+    private void inicializarVentana() {
+        frame.setSize(400, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
         lblUsuario.setBounds(50, 80, 300, 25);
         txtUsuario.setBounds(50, 30, 100, 25);
         lblClave.setBounds(50, 80, 300, 25);
         btnIngresar.setBounds(270, 30, 100, 25);
-
+        frame.add(lblUsuario);
+        frame.add(txtUsuario);
+        frame.add(lblClave);
+        frame.add(btnIngresar);
     }
 
     public void mostrarVentana() {
 
 
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-
-
     }
 
     private void login() {
+        btnIngresar.addActionListener(e -> {
+            String datos = txtUsuario.getText();
 
+        });
     }
     private String validarCredenciales(String u, String p) {
         return "";
