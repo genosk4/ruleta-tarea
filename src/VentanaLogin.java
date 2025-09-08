@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VentanaLogin {
+    public static void main(String[] args) {
+        new VentanaLogin().mostrarVentana();
+    }
 
     public static final List<Usuario> USUARIOS = new ArrayList<>();
 
@@ -15,44 +18,56 @@ public class VentanaLogin {
     private final JButton btnIngresar = new JButton("Ingresar");
 
     public VentanaLogin() {
-
-
-
+        inicializarUsuarios();
+        inicializarVentana();
+        configurarEventos();
     }
 
     private void inicializarUsuarios() {
-        USUARIOS.add(new Usuario("daniel", "1111", "Daniel Lincopi"))
+        USUARIOS.add(new Usuario("daniel", "1111", "Daniel Lincopi"));
     }
 
     private void inicializarVentana() {
         frame.setSize(400, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
-        lblUsuario.setBounds(50, 80, 300, 25);
-        txtUsuario.setBounds(50, 30, 100, 25);
-        lblClave.setBounds(50, 80, 300, 25);
-        btnIngresar.setBounds(270, 30, 100, 25);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame. setLocationRelativeTo(null);
+
+        lblUsuario.setBounds(30, 30, 80, 25);
+        txtUsuario.setBounds(120, 30, 130, 25);
+        lblClave.setBounds(30, 70, 80, 25);
+        txtClave.setBounds(120, 70, 130, 25);
+        btnIngresar.setBounds(100, 110, 100, 30);
+
         frame.add(lblUsuario);
         frame.add(txtUsuario);
         frame.add(lblClave);
+        frame.add(txtClave);
         frame.add(btnIngresar);
+
+    }
+    private void configurarEventos() {
+        btnIngresar.addActionListener(e -> login());
+
     }
 
     public void mostrarVentana() {
-
-
+        frame.setVisible(true);
     }
 
     private void login() {
-        btnIngresar.addActionListener(e -> {
-            String datos = txtUsuario.getText();
 
-        });
     }
     private String validarCredenciales(String u, String p) {
+        for (Usuario user : USUARIOS) {
+            if (user.validarCredenciales(u, p)) {
+                return user.getNombre();
+            }
+        }
         return "";
     }
     void abrirRegistro() {
+
 
     }
 }
