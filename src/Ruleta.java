@@ -130,7 +130,6 @@ public class Ruleta {
             System.out.println("% de acierto: " + String.format("%.2f", porcentaje) + "%");
         }
         System.out.println("Ganancia/Pérdida neta: $" + ganancia);
-        System.out.println("========================");
     }
 
 
