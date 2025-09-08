@@ -56,7 +56,25 @@ public class VentanaLogin {
     }
 
     private void login() {
+        String usuarioIngresado = txtUsuario.getText();
+        String claveIngresada = new String(txtClave.getPassword());
 
+        String nombre = validarCredenciales(usuarioIngresado, claveIngresada);
+
+        if (!nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(frame,
+                    "Bienvenido " + nombre,
+                    "a ingresado exitosamente",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            frame.dispose();
+            Ruleta.main(new String[]{});
+        } else {
+            JOptionPane.showMessageDialog(frame,
+                    "Usuario o clave incorrectos",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
     private String validarCredenciales(String u, String p) {
         for (Usuario user : USUARIOS) {
