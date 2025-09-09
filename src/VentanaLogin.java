@@ -16,6 +16,7 @@ public class VentanaLogin {
     private final JLabel lblClave = new JLabel("Clave:");
     private final JPasswordField txtClave = new JPasswordField();
     private final JButton btnIngresar = new JButton("Ingresar");
+    private final JButton btnRegistrar = new JButton("Registrar");
 
     public VentanaLogin() {
         inicializarUsuarios();
@@ -37,7 +38,8 @@ public class VentanaLogin {
         txtUsuario.setBounds(120, 30, 130, 25);
         lblClave.setBounds(30, 70, 80, 25);
         txtClave.setBounds(120, 70, 130, 25);
-        btnIngresar.setBounds(100, 110, 100, 30);
+        btnIngresar.setBounds(40, 120, 100, 30);
+        btnRegistrar.setBounds(150, 120, 100, 30);
 
         frame.add(lblUsuario);
         frame.add(txtUsuario);
@@ -48,6 +50,7 @@ public class VentanaLogin {
     }
     private void configurarEventos() {
         btnIngresar.addActionListener(e -> login());
+        btnRegistrar.addActionListener(e -> abrirRegistro());
 
     }
 
@@ -85,6 +88,8 @@ public class VentanaLogin {
         return "";
     }
     void abrirRegistro() {
+        frame.dispose();
+        new VentanaRegistro().mostrarVentana();
 
 
     }
