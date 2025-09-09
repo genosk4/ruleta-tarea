@@ -46,6 +46,7 @@ public class VentanaLogin {
         frame.add(lblClave);
         frame.add(txtClave);
         frame.add(btnIngresar);
+        frame.add(btnRegistrar);
 
     }
     private void configurarEventos() {
