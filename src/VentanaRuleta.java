@@ -10,7 +10,7 @@ public class VentanaRuleta {
 
     private final String nombreUsuario;
 
-    public VentanaMenu(String nombreUsuario) {
+    public VentanaRuleta(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
         configurarEventos();
     }
@@ -34,19 +34,26 @@ public class VentanaRuleta {
     }
     private void configurarEventos() {
         btnJugar.addActionListener(e -> abrirJuego());
-        btnHistorial.addActionListener(e -> mostrarHistorial());
+
         btnSalir.addActionListener(e -> salir());
 
     }
     private void abrirJuego() {
         frame.dispose();
-        new VentanaRuleta(nombreUsuario).mostrarVentana(); // <-- Ventana de juego
+        new VentanaRuleta(nombreUsuario).mostrarVentana();
     }
 
+    private void salir() {
+        frame.dispose();
+        new VentanaLogin().mostrarVentana();
     }
 
-    private void mostrarVentana() {
+
+
+    public void mostrarVentana() {
         frame.setVisible(true);
+    }
+
     }
 
 
