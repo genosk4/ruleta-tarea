@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VentanaLogin {
-    public static void main(String[] args) {
-        new VentanaLogin().mostrarVentana();
-    }
+
 
     public static final List<Usuario> USUARIOS = new ArrayList<>();
 
