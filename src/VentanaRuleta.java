@@ -12,6 +12,7 @@ public class VentanaRuleta {
 
     public VentanaRuleta(String nombreUsuario) {
         this.nombreUsuario = nombreUsuario;
+        inicializarVentana();
         configurarEventos();
     }
 
@@ -34,18 +35,38 @@ public class VentanaRuleta {
     }
     private void configurarEventos() {
         btnJugar.addActionListener(e -> abrirJuego());
-
+        btnHistorial.addActionListener(e -> mostrarHistorial());
         btnSalir.addActionListener(e -> salir());
 
     }
     private void abrirJuego() {
         frame.dispose();
+        //lo tengo que cambiar cuando cree otra clase que se encarge de mostrar el juego.
         new VentanaRuleta(nombreUsuario).mostrarVentana();
     }
 
     private void salir() {
         frame.dispose();
         new VentanaLogin().mostrarVentana();
+    }
+    private void mostrarHistorial() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("----- Historial -----\n");
+        for (int i = 0; i < Ruleta.historialSize; i++) {
+            sb.append("Ronda ").append(i + 1)
+                    .append(": Número=").append(Ruleta.historialNumeros[i])
+                    .append(", Apuesta=").append(Ruleta.historialApuestas[i])
+                    .append(", Acierto=").append(Ruleta.historialAciertos[i] ? "Sí" : "No")
+                    .append("\n");
+        }
+        if (Ruleta.historialSize == 0) {
+            sb.append("No hay partidas jugadas aún.");
+        }
+
+        JOptionPane.showMessageDialog(frame,
+                sb.toString(),
+                "Historial",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
 

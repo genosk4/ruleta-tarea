@@ -23,7 +23,7 @@ public class VentanaLogin {
     }
 
     private void inicializarUsuarios() {
-        USUARIOS.add(new Usuario("daniel", "1111", "Daniel Lincopi"));
+        USUARIOS.add(new Usuario("daniel", "1234", "Daniel Lincopi"));
     }
 
     private void inicializarVentana() {
