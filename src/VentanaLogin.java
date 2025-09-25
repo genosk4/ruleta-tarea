@@ -70,7 +70,7 @@ public class VentanaLogin {
                     JOptionPane.INFORMATION_MESSAGE);
 
             frame.dispose();
-            new VentanaMenu(nombre).mostrarVentana();
+            new VentanaMenu().mostrarVentana();
         } else {
             JOptionPane.showMessageDialog(frame,
                     "Usuario o clave incorrectos",
