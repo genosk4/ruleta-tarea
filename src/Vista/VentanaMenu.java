@@ -1,3 +1,7 @@
+package Vista;
+
+import Modelo.Ruleta;
+
 import javax.swing.*;
 
 public class VentanaMenu {
@@ -6,6 +10,8 @@ public class VentanaMenu {
     private final JButton btnJugar = new JButton("Jugar");
     private final JButton btnHistorial = new JButton("Historial");
     private final JButton btnSalir = new JButton("Salir");
+    private final JButton btnSaldo = new JButton("Saldo");
+    private final JLabel lblSaldo = new JLabel();
 
 
 
@@ -41,6 +47,11 @@ public class VentanaMenu {
     private void abrirJuego() {
         frame.dispose();
         new VentanaRuleta().setVisible(true);
+    }
+    private void refrescarSaldo() {
+        int saldo = ruleta.getSaldo();
+        lblSaldo.setText("Saldo: $" + saldo);
+
     }
 
     private void salir() {

@@ -1,3 +1,7 @@
+package Vista;
+
+import Modelo.Ruleta;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +19,7 @@ public class VentanaRuleta extends JFrame {
     }
 
     private void inicializarVentana() {
-        setTitle("Juego de la Ruleta");
+        setTitle("Juego de la Modelo.Ruleta");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

@@ -1,8 +1,12 @@
+package Vista;
+
+import Modelo.Usuario;
+
 import javax.swing.*;
 
 public class VentanaRegistro {
     private final JFrame frame = new JFrame("Registro - Casino Black Cat");
-    private final JLabel lblUsuario = new JLabel("Usuario:");
+    private final JLabel lblUsuario = new JLabel("Modelo.Usuario:");
     private final JTextField txtUsuario = new JTextField();
     private final JLabel lblClave = new JLabel("Clave:");
     private final JPasswordField txtClave = new JPasswordField();
@@ -61,7 +65,7 @@ public class VentanaRegistro {
         VentanaLogin.USUARIOS.add(new Usuario(usuario, clave, nombre));
 
         JOptionPane.showMessageDialog(frame,
-                "Usuario registrado con éxito",
+                "Modelo.Usuario registrado con éxito",
                 "Registro exitoso",
                 JOptionPane.INFORMATION_MESSAGE);
 
