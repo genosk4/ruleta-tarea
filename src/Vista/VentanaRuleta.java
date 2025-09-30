@@ -1,96 +1,80 @@
 package Vista;
 
 import Modelo.Ruleta;
+import Modelo.TipoApuesta;
+import Modelo.Usuario;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class VentanaRuleta extends JFrame {
 
-    private JTextField txtMonto;
-    private JComboBox<String> comboTipo;
-    private JTextArea txtResultado;
-    private JTextArea txtHistorial;
+    private final JTextField txtMonto = new JTextField();
+    private final JComboBox<TipoApuesta> comboTipo = new JComboBox<>(TipoApuesta.values());
+    private final JTextArea txtResultado = new JTextArea();
+    private final JTextArea txtHistorial = new JTextArea();
+    private final Usuario usuario;
 
-    public VentanaRuleta() {
+    public VentanaRuleta(Usuario usuario) {
+        this.usuario = usuario;
         inicializarVentana();
     }
 
     private void inicializarVentana() {
-        setTitle("Juego de la Modelo.Ruleta");
-        setSize(600, 400);
+        setTitle("Juego de la Ruleta");
+        setSize(700, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(null);
 
 
-        JPanel panel = new JPanel(new BorderLayout(10, 10));
-        add(panel);
+        JLabel lblMonto = new JLabel("Monto:");
+        lblMonto.setBounds(20, 20, 50, 25);
+        txtMonto.setBounds(80, 20, 100, 25);
 
-
-        JPanel panelApuesta = new JPanel(new GridLayout(3, 2, 5, 5));
-        panelApuesta.setBorder(BorderFactory.createTitledBorder("Nueva Apuesta"));
-
-        panelApuesta.add(new JLabel("Monto:"));
-        txtMonto = new JTextField();
-        panelApuesta.add(txtMonto);
-
-        panelApuesta.add(new JLabel("Tipo de apuesta:"));
-        comboTipo = new JComboBox<>(new String[]{"Rojo (R)", "Negro (N)", "Par (P)", "Impar (I)"});
-        panelApuesta.add(comboTipo);
+        JLabel lblTipo = new JLabel("Tipo:");
+        lblTipo.setBounds(20, 60, 50, 25);
+        comboTipo.setBounds(80, 60, 100, 25);
 
         JButton btnApostar = new JButton("Apostar");
-        panelApuesta.add(btnApostar);
-
+        btnApostar.setBounds(200, 20, 120, 25);
         JButton btnEstadisticas = new JButton("Ver estadísticas");
-        panelApuesta.add(btnEstadisticas);
+        btnEstadisticas.setBounds(200, 60, 150, 25);
 
-        panel.add(panelApuesta, BorderLayout.NORTH);
-
-
-        txtResultado = new JTextArea(5, 20);
+        txtResultado.setBounds(20, 100, 330, 80);
         txtResultado.setEditable(false);
         txtResultado.setBorder(BorderFactory.createTitledBorder("Resultado"));
-        panel.add(new JScrollPane(txtResultado), BorderLayout.CENTER);
 
-
-        txtHistorial = new JTextArea(10, 20);
+        txtHistorial.setBounds(20, 200, 630, 200);
         txtHistorial.setEditable(false);
         txtHistorial.setBorder(BorderFactory.createTitledBorder("Historial"));
-        panel.add(new JScrollPane(txtHistorial), BorderLayout.EAST);
 
+        add(lblMonto);
+        add(txtMonto);
+        add(lblTipo);
+        add(comboTipo);
+        add(btnApostar);
+        add(btnEstadisticas);
+        add(txtResultado);
+        add(txtHistorial);
 
-        btnApostar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                apostar();
-            }
-        });
-
-        btnEstadisticas.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mostrarEstadisticas();
-            }
-        });
+        // Eventos
+        btnApostar.addActionListener(e -> apostar());
+        btnEstadisticas.addActionListener(e -> mostrarEstadisticas());
     }
 
     private void apostar() {
         try {
             int monto = Integer.parseInt(txtMonto.getText());
-            char tipo = switch (comboTipo.getSelectedIndex()) {
-                case 0 -> 'R';
-                case 1 -> 'N';
-                case 2 -> 'P';
-                case 3 -> 'I';
-                default -> 'R';
-            };
+            TipoApuesta tipo = (TipoApuesta) comboTipo.getSelectedItem();
+
+            if (!usuario.retirar(monto)) {
+                JOptionPane.showMessageDialog(this, "Saldo insuficiente.");
+                return;
+            }
 
             int numero = Ruleta.girarRuleta();
             boolean acierto = Ruleta.evaluarResultado(numero, tipo);
             Ruleta.registrarResultado(numero, tipo, monto, acierto);
-
 
             String mensaje = "Número obtenido: " + numero + "\n";
             mensaje += "Apuesta: " + tipo + " | Monto: $" + monto + "\n";
@@ -119,11 +103,8 @@ public class VentanaRuleta extends JFrame {
     private void mostrarEstadisticas() {
         txtResultado.setText(Ruleta.getEstadisticas());
     }
-
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new VentanaRuleta().setVisible(true);
-        });
-    }
 }
+
+
+
+

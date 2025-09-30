@@ -5,22 +5,23 @@ import Modelo.TipoApuesta;
 
 public class RuletaController {
 
-    public static String jugar(int monto, TipoApuesta tipo) {
-        var usuario = SessionController.getUsuarioActual();
+    private final Ruleta ruleta = new Ruleta();
 
-        if (!usuario.retirar(monto)) {
-            return "Saldo insuficiente.";
-        }
+    public int girarRuleta() { return Ruleta.girarRuleta(); }
 
-        int numero = Ruleta.girarRuleta();
-        boolean acierto = Ruleta.evaluarResultado(numero, tipo);
-        Ruleta.registrarResultado(numero, tipo, monto, acierto);
+    public boolean evaluarResultado(int numero, TipoApuesta tipo) { return ruleta.evaluarResultado(numero, tipo); }
 
-        if (acierto) usuario.depositar(monto * 2);
+    public void registrarResultado(int numero, TipoApuesta tipo, int apuesta, boolean acierto) { ruleta.registrarResultado(numero, tipo, apuesta, acierto); }
 
-        return "Número obtenido: " + numero +
-                "\nApuesta: " + tipo + " | Monto: $" + monto +
-                "\n" + (acierto ? "¡Ganaste!" : "Perdiste");
-    }
+    public String getEstadisticas() { return ruleta.getEstadisticas(); }
+
+    public int getSaldo() { return ruleta.getSaldo(); }
+
+    public void depositar(int monto) { ruleta.depositar(monto); }
+
+    public boolean retirar(int monto) { return ruleta.retirar(monto); }
 }
+
+
+
 

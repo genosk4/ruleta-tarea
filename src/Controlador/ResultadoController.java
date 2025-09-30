@@ -1,18 +1,28 @@
 package Controlador;
 
-import Modelo.Ruleta;
 import Modelo.Resultado;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResultadoController {
-    public static String historialToString() {
-        StringBuilder sb = new StringBuilder();
-        for (Resultado r : Ruleta.getHistorial()) {
-            sb.append("N°: ").append(r.getNumero())
-                    .append(" | Tipo: ").append(r.getTipoApuesta())
-                    .append(" | Monto: $").append(r.getMonto())
-                    .append(" | Resultado: ").append(r.isAcierto() ? "Ganó" : "Perdió")
-                    .append("\n");
-        }
-        return sb.length() == 0 ? "No hay partidas jugadas aún." : sb.toString();
+
+    private final List<Resultado> resultados;
+
+    public ResultadoController() {
+        resultados = new ArrayList<>();
+    }
+
+    public void agregarResultado(Resultado r) {
+        resultados.add(r);
+    }
+
+    public List<Resultado> getResultados() {
+        return new ArrayList<>(resultados); // Devuelve copia para proteger encapsulamiento
+    }
+
+    public void limpiarResultados() {
+        resultados.clear();
     }
 }
+
+

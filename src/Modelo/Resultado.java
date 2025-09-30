@@ -18,3 +18,4 @@ public class Resultado {
     public int getMonto() { return monto; }
     public boolean isAcierto() { return acierto; }
 }
+

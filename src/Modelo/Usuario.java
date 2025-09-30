@@ -1,52 +1,49 @@
 package Modelo;
 
 public class Usuario {
-    private  String username;
-    private  String password;
-    private  String nombre;
+    private final String username;
+    private String password;
+    private String nombre;
+    private int saldo;
 
-    public Usuario(String username,String password, String nombre) {
+    public Usuario(String username, String password, String nombre) {
         this.username = username;
         this.password = password;
         setNombre(nombre);
+        this.saldo = 0;
     }
+
     public Usuario() {
         this.username = "invitado";
         this.password = "1234";
         this.nombre = "Invitado";
+        this.saldo = 0;
     }
 
-    public boolean validarCredenciales(String u, String p) {
-        return this.username.equals(u) && this.password.equals(p);
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    //  evita nombre vacío
+    public String getUsername() { return username; }
+    public String getNombre() { return nombre; }
     public void setNombre(String nombre) {
         if (nombre != null && !nombre.trim().isEmpty()) {
             this.nombre = nombre;
-        } else {
-            System.out.println("El nombre no puede estar vacío. Se mantiene el anterior.");
         }
     }
+    public int getSaldo() { return saldo; }
 
+    public void depositar(int monto) {
+        if (monto > 0) saldo += monto;
+    }
+
+    public boolean retirar(int monto) {
+        if (monto > 0 && monto <= saldo) {
+            saldo -= monto;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean validarCredenciales(String username, String password) {
+        return this.username.equals(username) && this.password.equals(password);
+    }
 }
+
 
