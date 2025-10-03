@@ -17,5 +17,16 @@ public class Resultado {
     public TipoApuesta getTipoApuesta() { return tipoApuesta; }
     public int getMonto() { return monto; }
     public boolean isAcierto() { return acierto; }
+
+    @Override
+    public String toString() {
+        return "Resultado{" +
+                "numero=" + numero +
+                ", tipoApuesta=" + tipoApuesta +
+                ", monto=" + monto +
+                ", acierto=" + acierto +
+                '}';
+    }
 }
+
 

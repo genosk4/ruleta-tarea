@@ -66,18 +66,7 @@ public class VentanaMenu {
     }
 
     private void mostrarHistorial() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("----- Historial -----\n");
-        for (int i = 0; i < Modelo.Ruleta.getHistorialSize(); i++) {
-            sb.append("Ronda ").append(i + 1)
-                    .append(": Número=").append(Modelo.Ruleta.getNumeroHistorial(i))
-                    .append(", Tipo=").append(Modelo.Ruleta.getTipoHistorial(i))
-                    .append(", Apuesta=").append(Modelo.Ruleta.getApuestaHistorial(i))
-                    .append(", Acierto=").append(Modelo.Ruleta.getAciertoHistorial(i) ? "Sí" : "No")
-                    .append("\n");
-        }
-        if (Modelo.Ruleta.getHistorialSize() == 0) sb.append("No hay partidas jugadas aún.");
-        JOptionPane.showMessageDialog(frame, sb.toString(), "Historial", JOptionPane.INFORMATION_MESSAGE);
+        new VentanaHistorial(usuario).setVisible(true);
     }
 
     private void mostrarPerfil() {

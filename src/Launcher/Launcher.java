@@ -11,6 +11,7 @@ public class Launcher {
 
 
         sessionController.registrarUsuario("daniel", "1234", "Daniel Lincopi");
+        sessionController.registrarUsuario("GenosK4", "12345", "Daniel");
 
         javax.swing.SwingUtilities.invokeLater(() -> {
             new VentanaLogin(sessionController).mostrarVentana();

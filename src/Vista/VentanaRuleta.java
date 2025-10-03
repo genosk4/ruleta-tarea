@@ -1,6 +1,7 @@
 package Vista;
 
-import Modelo.Ruleta;
+import Controlador.RuletaController;
+import Modelo.Resultado;
 import Modelo.TipoApuesta;
 import Modelo.Usuario;
 
@@ -12,7 +13,9 @@ public class VentanaRuleta extends JFrame {
     private final JComboBox<TipoApuesta> comboTipo = new JComboBox<>(TipoApuesta.values());
     private final JTextArea txtResultado = new JTextArea();
     private final JTextArea txtHistorial = new JTextArea();
+
     private final Usuario usuario;
+    private final RuletaController ruletaController = new RuletaController();
 
     public VentanaRuleta(Usuario usuario) {
         this.usuario = usuario;
@@ -25,7 +28,6 @@ public class VentanaRuleta extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
-
 
         JLabel lblMonto = new JLabel("Monto:");
         lblMonto.setBounds(20, 20, 50, 25);
@@ -67,20 +69,30 @@ public class VentanaRuleta extends JFrame {
             int monto = Integer.parseInt(txtMonto.getText());
             TipoApuesta tipo = (TipoApuesta) comboTipo.getSelectedItem();
 
-            if (!usuario.retirar(monto)) {
+            // Verificar saldo
+            if (!ruletaController.retirar(usuario, monto)) {
                 JOptionPane.showMessageDialog(this, "Saldo insuficiente.");
                 return;
             }
 
-            int numero = Ruleta.girarRuleta();
-            boolean acierto = Ruleta.evaluarResultado(numero, tipo);
-            Ruleta.registrarResultado(numero, tipo, monto, acierto);
+            // Girar y evaluar
+            int numero = ruletaController.girarRuleta();
+            boolean acierto = ruletaController.evaluarResultado(numero, tipo);
 
+            if (acierto) {
+                ruletaController.depositar(usuario, monto * 2);
+            }
+
+            // Registrar resultado en usuario y en estadísticas globales
+            ruletaController.registrarResultado(usuario, numero, tipo, monto, acierto);
+
+            // Mostrar resultado
             String mensaje = "Número obtenido: " + numero + "\n";
             mensaje += "Apuesta: " + tipo + " | Monto: $" + monto + "\n";
             mensaje += acierto ? "¡Ganaste!\n" : "Perdiste\n";
             txtResultado.setText(mensaje);
 
+            // Actualizar historial
             actualizarHistorial();
 
         } catch (NumberFormatException ex) {
@@ -90,20 +102,29 @@ public class VentanaRuleta extends JFrame {
 
     private void actualizarHistorial() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < Ruleta.getHistorialSize(); i++) {
-            sb.append("N°: ").append(Ruleta.getNumeroHistorial(i))
-                    .append(" | Tipo: ").append(Ruleta.getTipoHistorial(i))
-                    .append(" | Monto: $").append(Ruleta.getApuestaHistorial(i))
-                    .append(" | Resultado: ").append(Ruleta.getAciertoHistorial(i) ? "Ganó" : "Perdió")
+        int ronda = 1;
+        for (Resultado r : usuario.getHistorial()) {
+            sb.append("Ronda ").append(ronda++)
+                    .append(" | ").append(r.toString())
                     .append("\n");
         }
         txtHistorial.setText(sb.toString());
     }
 
     private void mostrarEstadisticas() {
-        txtResultado.setText(Ruleta.getEstadisticas());
+        int totalJugadas = usuario.getHistorial().size();
+        long ganadas = usuario.getHistorial().stream().filter(Resultado::isAcierto).count();
+        long perdidas = totalJugadas - ganadas;
+
+        String estadisticas = "Estadísticas del usuario:\n";
+        estadisticas += "Total de jugadas: " + totalJugadas + "\n";
+        estadisticas += "Ganadas: " + ganadas + "\n";
+        estadisticas += "Perdidas: " + perdidas + "\n";
+
+        txtResultado.setText(estadisticas);
     }
 }
+
 
 
 

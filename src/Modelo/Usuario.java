@@ -1,16 +1,21 @@
 package Modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Usuario {
     private final String username;
     private String password;
     private String nombre;
     private int saldo;
 
+    private final List<Resultado> historial = new ArrayList<>();
+
     public Usuario(String username, String password, String nombre) {
         this.username = username;
         this.password = password;
         setNombre(nombre);
-        this.saldo = 0;
+        this.saldo = 1000;
     }
 
     public Usuario() {
@@ -39,6 +44,14 @@ public class Usuario {
             return true;
         }
         return false;
+    }
+
+    public void registrarResultado(Resultado resultado) {
+        historial.add(resultado);
+    }
+
+    public List<Resultado> getHistorial() {
+        return historial;
     }
 
     public boolean validarCredenciales(String username, String password) {
