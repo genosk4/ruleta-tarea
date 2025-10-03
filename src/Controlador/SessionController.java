@@ -25,7 +25,16 @@ public class SessionController {
         return false;
     }
 
+    public void logout() {
+        usuarioActual = null;
+    }
+
     public Usuario getUsuarioActual() { return usuarioActual; }
+
+    // NUEVO MÉTODO: Para que la vista no acceda directamente a la lista
+    public boolean existeUsuario(String username) {
+        return buscarUsuario(username) != null;
+    }
 
     private Usuario buscarUsuario(String username) {
         for (Usuario u : usuarios) if (u.getUsername().equals(username)) return u;

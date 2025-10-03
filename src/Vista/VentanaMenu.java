@@ -1,5 +1,6 @@
 package Vista;
 
+import Controlador.RuletaController;
 import Controlador.SessionController;
 import Modelo.Usuario;
 
@@ -15,6 +16,7 @@ public class VentanaMenu {
     private final JLabel lblSaldo = new JLabel();
     private final Usuario usuario;
     private final SessionController sessionController;
+    private final RuletaController ruletaController = new RuletaController(); // NUEVO
 
     public VentanaMenu(Usuario usuario, SessionController sessionController) {
         this.usuario = usuario;
@@ -57,10 +59,12 @@ public class VentanaMenu {
     }
 
     private void refrescarSaldo() {
-        lblSaldo.setText("Saldo: $" + usuario.getSaldo());
+
+        lblSaldo.setText("Saldo: $" + ruletaController.getSaldo(usuario));
     }
 
     private void salir() {
+        sessionController.logout(); // NUEVO: Usar controlador para logout
         frame.dispose();
         new VentanaLogin(sessionController).mostrarVentana();
     }
@@ -72,17 +76,23 @@ public class VentanaMenu {
     private void mostrarPerfil() {
         String nuevoNombre = JOptionPane.showInputDialog(frame, "Nombre actual: " + usuario.getNombre() + "\nIngrese nuevo nombre:", usuario.getNombre());
         if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) usuario.setNombre(nuevoNombre);
+
         JOptionPane.showMessageDialog(frame,
-                "Usuario: " + usuario.getUsername() + "\nNombre: " + usuario.getNombre() + "\nSaldo: $" + usuario.getSaldo(),
+                "Usuario: " + usuario.getUsername() + "\nNombre: " + usuario.getNombre() + "\nSaldo: $" + ruletaController.getSaldo(usuario), // USAR CONTROLADOR
                 "Perfil", JOptionPane.INFORMATION_MESSAGE);
 
         int opcion = JOptionPane.showConfirmDialog(frame, "¿Desea recargar saldo?", "Recarga de saldo", JOptionPane.YES_NO_OPTION);
         if (opcion == JOptionPane.YES_OPTION) {
             String montoStr = JOptionPane.showInputDialog(frame, "Ingrese monto a recargar:");
-            try { int monto = Integer.parseInt(montoStr); usuario.depositar(monto); }
-            catch (NumberFormatException ex) { JOptionPane.showMessageDialog(frame, "Monto inválido.", "Error", JOptionPane.ERROR_MESSAGE); }
+            try {
+                int monto = Integer.parseInt(montoStr);
+                ruletaController.depositar(usuario, monto); // USAR CONTROLADOR
+                refrescarSaldo();
+            }
+            catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame, "Monto inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
-        refrescarSaldo();
     }
 
     public void mostrarVentana() { frame.setVisible(true); }

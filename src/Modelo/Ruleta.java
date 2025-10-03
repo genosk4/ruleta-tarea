@@ -7,10 +7,9 @@ public class Ruleta {
     private int saldo;
     private static final int MAX_HISTORIAL = 100;
 
-
     private static final int[] historialNumeros = new int[MAX_HISTORIAL];
-    private static final int[] historialApuestas = new int[MAX_HISTORIAL];
     private static final TipoApuesta[] historialTipos = new TipoApuesta[MAX_HISTORIAL];
+    private static final int[] historialApuestas = new int[MAX_HISTORIAL];
     private static final boolean[] historialAciertos = new boolean[MAX_HISTORIAL];
     private static int historialSize = 0;
 
@@ -18,7 +17,6 @@ public class Ruleta {
 
     private static final int[] numerosRojos =
             {1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36};
-
 
     public Ruleta(int saldoInicial) {
         if (saldoInicial >= 0) this.saldo = saldoInicial;
@@ -29,12 +27,10 @@ public class Ruleta {
         this.saldo = 0;
     }
 
-
     public int getSaldo() { return saldo; }
     public void setSaldo(int saldo) {
         if (saldo >= 0) this.saldo = saldo;
     }
-
 
     public void depositar(int monto) {
         if (monto > 0) saldo += monto;
@@ -50,12 +46,12 @@ public class Ruleta {
         return false;
     }
 
-
-    public static int girarRuleta() {
+    // CAMBIADO: Método de instancia en lugar de estático
+    public int girarRuleta() {
         return rng.nextInt(37);
     }
 
-
+    // Mantener estático para compatibilidad
     public static boolean evaluarResultado(int numero, TipoApuesta tipo) {
         switch (tipo) {
             case ROJO: return esRojo(numero);
@@ -66,14 +62,12 @@ public class Ruleta {
         }
     }
 
-
     public static boolean esRojo(int n) {
         for (int rojo : numerosRojos) {
             if (rojo == n) return true;
         }
         return false;
     }
-
 
     public static void registrarResultado(int numero, TipoApuesta tipo, int apuesta, boolean acierto) {
         if (historialSize < MAX_HISTORIAL) {
@@ -84,7 +78,6 @@ public class Ruleta {
             historialSize++;
         }
     }
-
 
     public static String getEstadisticas() {
         int totalJugadas = historialSize;
@@ -114,7 +107,6 @@ public class Ruleta {
         sb.append("Ganancia/Pérdida neta: $").append(ganancia).append("\n");
         return sb.toString();
     }
-
 
     public static int getHistorialSize() { return historialSize; }
     public static int getNumeroHistorial(int i) { return historialNumeros[i]; }

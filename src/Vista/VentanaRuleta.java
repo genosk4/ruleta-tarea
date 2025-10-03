@@ -65,44 +65,57 @@ public class VentanaRuleta extends JFrame {
     }
 
     private void apostar() {
-        try {
-            int monto = Integer.parseInt(txtMonto.getText());
-            TipoApuesta tipo = (TipoApuesta) comboTipo.getSelectedItem();
+        String montoTexto = txtMonto.getText().trim();
 
-            // Verificar saldo
-            if (!ruletaController.retirar(usuario, monto)) {
-                JOptionPane.showMessageDialog(this, "Saldo insuficiente.");
-                return;
-            }
 
-            // Girar y evaluar
-            int numero = ruletaController.girarRuleta();
-            boolean acierto = ruletaController.evaluarResultado(numero, tipo);
-
-            if (acierto) {
-                ruletaController.depositar(usuario, monto * 2);
-            }
-
-            // Registrar resultado en usuario y en estadísticas globales
-            ruletaController.registrarResultado(usuario, numero, tipo, monto, acierto);
-
-            // Mostrar resultado
-            String mensaje = "Número obtenido: " + numero + "\n";
-            mensaje += "Apuesta: " + tipo + " | Monto: $" + monto + "\n";
-            mensaje += acierto ? "¡Ganaste!\n" : "Perdiste\n";
-            txtResultado.setText(mensaje);
-
-            // Actualizar historial
-            actualizarHistorial();
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Ingrese un monto válido.");
+        if (montoTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese un monto.");
+            return;
         }
+
+
+        boolean esNumero = true;
+        for (char c : montoTexto.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                esNumero = false;
+                break;
+            }
+        }
+
+        if (!esNumero) {
+            JOptionPane.showMessageDialog(this, "Ingrese un monto válido (solo números).");
+            return;
+        }
+
+
+        int monto = Integer.parseInt(montoTexto);
+        TipoApuesta tipo = (TipoApuesta) comboTipo.getSelectedItem();
+
+
+        if (monto <= 0) {
+            JOptionPane.showMessageDialog(this, "El monto debe ser mayor a 0.");
+            return;
+        }
+
+
+        Resultado resultado = ruletaController.procesarApuesta(usuario, tipo, monto);
+
+
+        String mensaje = "Número obtenido: " + resultado.getNumero() + "\n";
+        mensaje += "Apuesta: " + resultado.getTipoApuesta() + " | Monto: $" + resultado.getMonto() + "\n";
+        mensaje += resultado.isAcierto() ? "¡Ganaste!\n" : "Perdiste\n";
+        mensaje += "Nuevo saldo: $" + ruletaController.getSaldo(usuario);
+        txtResultado.setText(mensaje);
+
+
+        actualizarHistorial();
     }
 
     private void actualizarHistorial() {
         StringBuilder sb = new StringBuilder();
         int ronda = 1;
+
+
         for (Resultado r : usuario.getHistorial()) {
             sb.append("Ronda ").append(ronda++)
                     .append(" | ").append(r.toString())
@@ -112,15 +125,8 @@ public class VentanaRuleta extends JFrame {
     }
 
     private void mostrarEstadisticas() {
-        int totalJugadas = usuario.getHistorial().size();
-        long ganadas = usuario.getHistorial().stream().filter(Resultado::isAcierto).count();
-        long perdidas = totalJugadas - ganadas;
 
-        String estadisticas = "Estadísticas del usuario:\n";
-        estadisticas += "Total de jugadas: " + totalJugadas + "\n";
-        estadisticas += "Ganadas: " + ganadas + "\n";
-        estadisticas += "Perdidas: " + perdidas + "\n";
-
+        String estadisticas = ruletaController.getEstadisticasUsuario(usuario);
         txtResultado.setText(estadisticas);
     }
 }

@@ -56,6 +56,7 @@ public class VentanaLogin {
         String usuario = txtUsuario.getText();
         String clave = new String(txtClave.getPassword());
 
+        // USAR EXCLUSIVAMENTE EL CONTROLADOR
         if (sessionController.login(usuario, clave)) {
             Usuario u = sessionController.getUsuarioActual();
             JOptionPane.showMessageDialog(frame,
