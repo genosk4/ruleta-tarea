@@ -1,7 +1,7 @@
 package Vista;
 
-import Controlador.RuletaController;
 import Controlador.SessionController;
+import Controlador.RuletaController;
 import Modelo.Usuario;
 
 import javax.swing.*;
@@ -16,7 +16,7 @@ public class VentanaMenu {
     private final JLabel lblSaldo = new JLabel();
     private final Usuario usuario;
     private final SessionController sessionController;
-    private final RuletaController ruletaController = new RuletaController(); // NUEVO
+    private final RuletaController ruletaController = new RuletaController();
 
     public VentanaMenu(Usuario usuario, SessionController sessionController) {
         this.usuario = usuario;
@@ -59,12 +59,11 @@ public class VentanaMenu {
     }
 
     private void refrescarSaldo() {
-
         lblSaldo.setText("Saldo: $" + ruletaController.getSaldo(usuario));
     }
 
     private void salir() {
-        sessionController.logout(); // NUEVO: Usar controlador para logout
+        sessionController.logout();
         frame.dispose();
         new VentanaLogin(sessionController).mostrarVentana();
     }
@@ -78,7 +77,7 @@ public class VentanaMenu {
         if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) usuario.setNombre(nuevoNombre);
 
         JOptionPane.showMessageDialog(frame,
-                "Usuario: " + usuario.getUsername() + "\nNombre: " + usuario.getNombre() + "\nSaldo: $" + ruletaController.getSaldo(usuario), // USAR CONTROLADOR
+                "Usuario: " + usuario.getUsername() + "\nNombre: " + usuario.getNombre() + "\nSaldo: $" + ruletaController.getSaldo(usuario),
                 "Perfil", JOptionPane.INFORMATION_MESSAGE);
 
         int opcion = JOptionPane.showConfirmDialog(frame, "¿Desea recargar saldo?", "Recarga de saldo", JOptionPane.YES_NO_OPTION);
@@ -86,7 +85,7 @@ public class VentanaMenu {
             String montoStr = JOptionPane.showInputDialog(frame, "Ingrese monto a recargar:");
             try {
                 int monto = Integer.parseInt(montoStr);
-                ruletaController.depositar(usuario, monto); // USAR CONTROLADOR
+                ruletaController.depositar(usuario, monto);
                 refrescarSaldo();
             }
             catch (NumberFormatException ex) {

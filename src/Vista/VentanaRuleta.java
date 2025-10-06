@@ -42,6 +42,10 @@ public class VentanaRuleta extends JFrame {
         JButton btnEstadisticas = new JButton("Ver estadísticas");
         btnEstadisticas.setBounds(200, 60, 150, 25);
 
+        // NUEVO BOTÓN: Volver al menú principal
+        JButton btnVolver = new JButton("Volver al Menú");
+        btnVolver.setBounds(370, 20, 150, 25);
+
         txtResultado.setBounds(20, 100, 330, 80);
         txtResultado.setEditable(false);
         txtResultado.setBorder(BorderFactory.createTitledBorder("Resultado"));
@@ -56,12 +60,14 @@ public class VentanaRuleta extends JFrame {
         add(comboTipo);
         add(btnApostar);
         add(btnEstadisticas);
+        add(btnVolver);
         add(txtResultado);
         add(txtHistorial);
 
-        // Eventos
+
         btnApostar.addActionListener(e -> apostar());
         btnEstadisticas.addActionListener(e -> mostrarEstadisticas());
+        btnVolver.addActionListener(e -> volverAlMenu()); // NUEVO EVENTO
     }
 
     private void apostar() {
@@ -97,24 +103,28 @@ public class VentanaRuleta extends JFrame {
             return;
         }
 
+        try {
 
-        Resultado resultado = ruletaController.procesarApuesta(usuario, tipo, monto);
-
-
-        String mensaje = "Número obtenido: " + resultado.getNumero() + "\n";
-        mensaje += "Apuesta: " + resultado.getTipoApuesta() + " | Monto: $" + resultado.getMonto() + "\n";
-        mensaje += resultado.isAcierto() ? "¡Ganaste!\n" : "Perdiste\n";
-        mensaje += "Nuevo saldo: $" + ruletaController.getSaldo(usuario);
-        txtResultado.setText(mensaje);
+            Resultado resultado = ruletaController.procesarApuesta(usuario, tipo, monto);
 
 
-        actualizarHistorial();
+            String mensaje = "Número obtenido: " + resultado.getNumero() + "\n";
+            mensaje += "Apuesta: " + resultado.getTipoApuesta() + " | Monto: $" + resultado.getMonto() + "\n";
+            mensaje += resultado.isAcierto() ? "¡Ganaste!\n" : "Perdiste\n";
+            mensaje += "Nuevo saldo: $" + ruletaController.getSaldo(usuario);
+            txtResultado.setText(mensaje);
+
+
+            actualizarHistorial();
+
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }
 
     private void actualizarHistorial() {
         StringBuilder sb = new StringBuilder();
         int ronda = 1;
-
 
         for (Resultado r : usuario.getHistorial()) {
             sb.append("Ronda ").append(ronda++)
@@ -129,8 +139,20 @@ public class VentanaRuleta extends JFrame {
         String estadisticas = ruletaController.getEstadisticasUsuario(usuario);
         txtResultado.setText(estadisticas);
     }
-}
 
+
+    private void volverAlMenu() {
+        int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro que desea volver al menú principal?",
+                "Volver al Menú",
+                JOptionPane.YES_NO_OPTION);
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new VentanaMenu(usuario, new Controlador.SessionController()).mostrarVentana();
+        }
+    }
+}
 
 
 
