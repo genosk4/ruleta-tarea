@@ -20,14 +20,14 @@ public class RuletaController {
     }
 
     public void registrarResultado(Usuario usuario, int numero, TipoApuesta tipo, int apuesta, boolean acierto) {
-        // CORREGIDO: Usar la instancia o mantener estático
+
         Ruleta.registrarResultado(numero, tipo, apuesta, acierto);
         Resultado r = new Resultado(numero, tipo, apuesta, acierto);
         usuario.registrarResultado(r);
     }
 
     public String getEstadisticas() {
-        // CORREGIDO: Mantener estático si así está en Ruleta
+
         return Ruleta.getEstadisticas();
     }
 
@@ -71,13 +71,10 @@ public class RuletaController {
         long ganadas = usuario.getHistorial().stream().filter(Resultado::isAcierto).count();
         long perdidas = totalJugadas - ganadas;
 
-        StringBuilder estadisticas = new StringBuilder();
-        estadisticas.append("Estadísticas del usuario:\n");
-        estadisticas.append("Total de jugadas: ").append(totalJugadas).append("\n");
-        estadisticas.append("Ganadas: ").append(ganadas).append("\n");
-        estadisticas.append("Perdidas: ").append(perdidas).append("\n");
-
-        return estadisticas.toString();
+        return "Estadísticas del usuario:\n" +
+                "Total de jugadas: " + totalJugadas + "\n" +
+                "Ganadas: " + ganadas + "\n" +
+                "Perdidas: " + perdidas + "\n";
     }
 }
 

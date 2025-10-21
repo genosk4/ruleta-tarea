@@ -31,7 +31,7 @@ public class SessionController {
 
     public Usuario getUsuarioActual() { return usuarioActual; }
 
-    // NUEVO MÉTODO: Para que la vista no acceda directamente a la lista
+
     public boolean existeUsuario(String username) {
         return buscarUsuario(username) != null;
     }
