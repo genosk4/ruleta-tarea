@@ -1,33 +1,55 @@
 package Controlador;
 
-import Modelo.Resultado;
-import Modelo.Ruleta;
-import Modelo.TipoApuesta;
-import Modelo.Usuario;
+import Modelo.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RuletaController {
-
     private final Ruleta ruleta = new Ruleta();
 
-    public int girarRuleta() {
+    public Resultado procesarApuesta(Usuario usuario, TipoApuesta tipo, int monto) {
 
-        return ruleta.girarRuleta();
+        ApuestaBase apuesta = crearApuestaDesdeTipo(tipo, monto);
+
+        if (usuario.getSaldo() < apuesta.getMonto()) {
+            throw new IllegalArgumentException("Saldo insuficiente para realizar la apuesta");
+        }
+
+        // Retirar monto del usuario
+        if (!usuario.retirar(apuesta.getMonto())) {
+            throw new IllegalArgumentException("Error al retirar fondos para la apuesta");
+        }
+
+        ResultadoJuego resultadoJuego = ruleta.jugar(apuesta);
+
+        if (resultadoJuego.isAcierto()) {
+            usuario.depositar(resultadoJuego.getGanancia());
+        }
+
+        Resultado resultado = new Resultado(
+                resultadoJuego.getNumeroGanador(),
+                tipo,
+                monto,
+                resultadoJuego.isAcierto()
+        );
+
+
+        usuario.registrarResultado(resultado);
+
+        return resultado;
     }
 
-    public boolean evaluarResultado(int numero, TipoApuesta tipo) {
-
-        return Ruleta.evaluarResultado(numero, tipo);
-    }
-
-    public void registrarResultado(Usuario usuario, int numero, TipoApuesta tipo, int apuesta, boolean acierto) {
-
-        Ruleta.registrarResultado(numero, tipo, apuesta, acierto);
-        Resultado r = new Resultado(numero, tipo, apuesta, acierto);
-        usuario.registrarResultado(r);
+    private ApuestaBase crearApuestaDesdeTipo(TipoApuesta tipo, int monto) {
+        switch (tipo) {
+            case ROJO: return new ApuestaRojo(monto);
+            case NEGRO: return new ApuestaNegro(monto);
+            case PAR: return new ApuestaPar(monto);
+            case IMPAR: return new ApuestaImpar(monto);
+            default: throw new IllegalArgumentException("Tipo de apuesta no válido: " + tipo);
+        }
     }
 
     public String getEstadisticas() {
-
         return Ruleta.getEstadisticas();
     }
 
@@ -43,42 +65,26 @@ public class RuletaController {
         return usuario.retirar(monto);
     }
 
-
-    public Resultado procesarApuesta(Usuario usuario, TipoApuesta tipo, int monto) {
-
-        if (!retirar(usuario, monto)) {
-            throw new IllegalArgumentException("Saldo insuficiente para realizar la apuesta");
-        }
-
-
-        int numero = girarRuleta();
-        boolean acierto = evaluarResultado(numero, tipo);
-
-
-        if (acierto) {
-            depositar(usuario, monto * 2);
-        }
-
-
-        registrarResultado(usuario, numero, tipo, monto, acierto);
-
-        return new Resultado(numero, tipo, monto, acierto);
-    }
-
-
     public String getEstadisticasUsuario(Usuario usuario) {
-        int totalJugadas = usuario.getHistorial().size();
-        long ganadas = usuario.getHistorial().stream().filter(Resultado::isAcierto).count();
+        List<Resultado> historial = usuario.getHistorial();
+        int totalJugadas = historial.size();
+        long ganadas = historial.stream().filter(Resultado::isAcierto).count();
         long perdidas = totalJugadas - ganadas;
+
+        int totalApostado = historial.stream()
+                .mapToInt(Resultado::getMonto)
+                .sum();
+
+        int gananciaNeta = historial.stream()
+                .mapToInt(r -> r.isAcierto() ? r.getMonto() : -r.getMonto())
+                .sum();
 
         return "Estadísticas del usuario:\n" +
                 "Total de jugadas: " + totalJugadas + "\n" +
                 "Ganadas: " + ganadas + "\n" +
-                "Perdidas: " + perdidas + "\n";
+                "Perdidas: " + perdidas + "\n" +
+                "Total apostado: $" + totalApostado + "\n" +
+                "Ganancia/Pérdida neta: $" + gananciaNeta + "\n" +
+                "Saldo actual: $" + usuario.getSaldo();
     }
 }
-
-
-
-
-

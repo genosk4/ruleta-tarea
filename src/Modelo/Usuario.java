@@ -21,9 +21,9 @@ public class Usuario {
     }
 
     public Usuario() {
-        this.username = "invitado";
+        this.username = "daniel";
         this.password = "1234";
-        this.nombre = "Invitado";
+        this.nombre = "Daniel";
         this.saldo = 0;
     }
 
