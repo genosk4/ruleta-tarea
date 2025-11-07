@@ -1,6 +1,7 @@
 package Modelo;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Estadisticas {
     private int totalJugadas;
@@ -8,13 +9,13 @@ public class Estadisticas {
     private double porcentajeVictorias;
     private int rachaMaxima;
     private int rachaActual;
-    private TipoApuesta tipoMasJugado;
-    private Usuario usuario;
+    private String tipoMasJugado;
+    private final IRepositorioResultados repositorio;
     private List<Resultado> resultados;
-    private Map<TipoApuesta, Integer> contadorTipos;
+    private Map<String, Integer> contadorTipos;
 
-    public Estadisticas(Usuario usuario) {
-        this.usuario = usuario;
+    public Estadisticas(Usuario usuario, IRepositorioResultados repositorio) {
+        this.repositorio = repositorio;
         this.resultados = new ArrayList<>();
         this.contadorTipos = new HashMap<>();
         this.rachaMaxima = 0;
@@ -23,15 +24,15 @@ public class Estadisticas {
     }
 
     private void inicializarContadorTipos() {
-        for (TipoApuesta tipo : TipoApuesta.values()) {
-            contadorTipos.put(tipo, 0);
-        }
+        contadorTipos.put("ROJO", 0);
+        contadorTipos.put("NEGRO", 0);
+        contadorTipos.put("PAR", 0);
+        contadorTipos.put("IMPAR", 0);
     }
 
     public void actualizarEstadisticas(Resultado resultado) {
         resultados.add(resultado);
         totalJugadas++;
-
 
         if (resultado.isAcierto()) {
             victorias++;
@@ -41,21 +42,28 @@ public class Estadisticas {
             rachaActual = 0;
         }
 
-
         porcentajeVictorias = totalJugadas > 0 ? (victorias * 100.0) / totalJugadas : 0;
 
-
-        TipoApuesta tipo = resultado.getTipoApuesta();
+        String tipo = resultado.getTipoApuesta().name();
         contadorTipos.put(tipo, contadorTipos.get(tipo) + 1);
 
         calcularTipoMasJugado();
     }
 
+    public void actualizarDesdeRepositorio() {
+        List<ResultadoJuego> resultadosJuego = repositorio.obtenerTodos();
+        totalJugadas = resultadosJuego.size();
+        victorias = repositorio.contarAciertos();
+        porcentajeVictorias = totalJugadas > 0 ? (victorias * 100.0) / totalJugadas : 0;
+
+        calcularTipoMasJugadoDesdeRepositorio();
+    }
+
     private void calcularTipoMasJugado() {
-        tipoMasJugado = TipoApuesta.ROJO; // Valor por defecto
+        tipoMasJugado = "ROJO";
         int maxCount = 0;
 
-        for (Map.Entry<TipoApuesta, Integer> entry : contadorTipos.entrySet()) {
+        for (Map.Entry<String, Integer> entry : contadorTipos.entrySet()) {
             if (entry.getValue() > maxCount) {
                 maxCount = entry.getValue();
                 tipoMasJugado = entry.getKey();
@@ -63,12 +71,24 @@ public class Estadisticas {
         }
     }
 
+    private void calcularTipoMasJugadoDesdeRepositorio() {
+        Map<String, Long> conteo = repositorio.obtenerTodos().stream()
+                .collect(Collectors.groupingBy(
+                        ResultadoJuego::getTipoApuesta,
+                        Collectors.counting()
+                ));
+
+        tipoMasJugado = conteo.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("ROJO");
+    }
 
     public int getTotalJugadas() { return totalJugadas; }
     public int getVictorias() { return victorias; }
     public double getPorcentajeVictorias() { return porcentajeVictorias; }
     public int getRachaMaxima() { return rachaMaxima; }
-    public TipoApuesta getTipoMasJugado() { return tipoMasJugado; }
+    public String getTipoMasJugado() { return tipoMasJugado; }
 
     public void reiniciarEstadisticas() {
         totalJugadas = 0;

@@ -6,26 +6,18 @@ import Vista.VentanaLogin;
 
 public class Launcher {
     public static void main(String[] args) {
-        System.out.println("Iniciando Sistema de Ruleta con Persistencia...");
+        boolean usarArchivo = true;
 
-        SessionController sessionController = new SessionController();
-        RuletaController ruletaController = new RuletaController();
+        SessionController sessionController = new SessionController(usarArchivo);
 
-        ruletaController.inicializarSistema();
+        RuletaController ruletaController = new RuletaController(sessionController.getRepositorio());
+
+        System.out.println("Usando: " +
+                (usarArchivo ? "RepositorioArchivo (CSV)" : "RepositorioEnMemoria"));
 
         javax.swing.SwingUtilities.invokeLater(() -> {
             new VentanaLogin(sessionController).mostrarVentana();
         });
-
-        agregarShutdownHook(sessionController);
-    }
-
-    private static void agregarShutdownHook(SessionController sessionController) {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Cerrando aplicacion, guardando estado...");
-            sessionController.guardarEstado();
-            System.out.println("Estado guardado exitosamente");
-        }));
     }
 }
 

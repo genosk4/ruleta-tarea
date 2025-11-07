@@ -5,10 +5,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RuletaController {
-    private final Ruleta ruleta = new Ruleta();
-    private final GestorPersistencia gestorPersistencia = new GestorPersistencia();
+    private Ruleta ruleta;
+    private final IRepositorioResultados repositorio;
+
+    public RuletaController(IRepositorioResultados repositorio) {
+        this.repositorio = repositorio;
+        this.ruleta = new Ruleta(repositorio);
+    }
 
     public Resultado procesarApuesta(Usuario usuario, TipoApuesta tipo, int monto) {
+        if (ruleta == null) {
+            this.ruleta = new Ruleta(usuario.getSaldo(), repositorio);
+        }
+
         ApuestaBase apuesta = crearApuestaDesdeTipo(tipo, monto);
 
         if (usuario.getSaldo() < apuesta.getMonto()) {
@@ -34,8 +43,6 @@ public class RuletaController {
 
         usuario.registrarResultado(resultado);
 
-        guardarEstadoActual();
-
         return resultado;
     }
 
@@ -49,19 +56,8 @@ public class RuletaController {
         }
     }
 
-    private void guardarEstadoActual() {
-        new Thread(() -> {
-            gestorPersistencia.guardarHistorialRuleta();
-            System.out.println("Estado guardado automaticamente");
-        }).start();
-    }
-
-    public void inicializarSistema() {
-        gestorPersistencia.cargarHistorialRuleta();
-    }
-
     public String getEstadisticas() {
-        return Ruleta.getEstadisticas();
+        return Ruleta.getEstadisticas(repositorio);
     }
 
     public int getSaldo(Usuario usuario) {
@@ -97,5 +93,9 @@ public class RuletaController {
                 "Total apostado: $" + totalApostado + "\n" +
                 "Ganancia/Perdida neta: $" + gananciaNeta + "\n" +
                 "Saldo actual: $" + usuario.getSaldo();
+    }
+
+    public IRepositorioResultados getRepositorio() {
+        return repositorio;
     }
 }

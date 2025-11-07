@@ -16,13 +16,14 @@ public class VentanaMenu {
     private final JLabel lblSaldo = new JLabel();
     private final Usuario usuario;
     private final SessionController sessionController;
-    private final RuletaController ruletaController = new RuletaController();
+    private final RuletaController ruletaController;
     private final JButton btnEstadisticas = new JButton("Estadísticas");
     private final JButton btnRespaldo = new JButton("Respaldar Datos");
 
-    public VentanaMenu(Usuario usuario, SessionController sessionController) {
+    public VentanaMenu(Usuario usuario, SessionController sessionController, RuletaController ruletaController) {
         this.usuario = usuario;
         this.sessionController = sessionController;
+        this.ruletaController = ruletaController;
         inicializarVentana();
         configurarEventos();
     }
@@ -67,7 +68,7 @@ public class VentanaMenu {
 
     private void abrirJuego() {
         frame.dispose();
-        new VentanaRuleta(usuario).setVisible(true);
+        new VentanaRuleta(usuario, ruletaController).setVisible(true);
     }
 
     private void refrescarSaldo() {

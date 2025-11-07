@@ -10,21 +10,23 @@ public class Usuario {
     private int saldo;
     private Estadisticas estadisticas;
 
+
     private final List<Resultado> historial = new ArrayList<>();
 
-    public Usuario(String username, String password, String nombre) {
+    public Usuario(String username, String password, String nombre, IRepositorioResultados repositorio) {
         this.username = username;
         this.password = password;
         setNombre(nombre);
         this.saldo = 1000;
-        this.estadisticas = new Estadisticas(this);
+        this.estadisticas = new Estadisticas(this, repositorio);
     }
 
-    public Usuario() {
+    public Usuario(IRepositorioResultados repositorio) {
         this.username = "daniel";
         this.password = "1234";
         this.nombre = "Daniel";
         this.saldo = 0;
+        this.estadisticas = new Estadisticas(this, repositorio);
     }
 
     public String getUsername() { return username; }

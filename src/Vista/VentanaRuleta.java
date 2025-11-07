@@ -15,10 +15,11 @@ public class VentanaRuleta extends JFrame {
     private final JTextArea txtHistorial = new JTextArea();
 
     private final Usuario usuario;
-    private final RuletaController ruletaController = new RuletaController();
+    private final RuletaController ruletaController;
 
-    public VentanaRuleta(Usuario usuario) {
+    public VentanaRuleta(Usuario usuario, RuletaController ruletaController) {
         this.usuario = usuario;
+        this.ruletaController = ruletaController;
         inicializarVentana();
     }
 

@@ -1,24 +1,34 @@
 package Controlador;
 
 import Modelo.Usuario;
-import Modelo.GestorPersistencia;
+import Modelo.IRepositorioResultados;
+import Modelo.RepositorioEnMemoria;
+import Modelo.RepositorioArchivo;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SessionController {
     private List<Usuario> usuarios;
     private Usuario usuarioActual;
-    private final GestorPersistencia gestorPersistencia;
+    private final IRepositorioResultados repositorio;
 
     public SessionController() {
-        this.gestorPersistencia = new GestorPersistencia();
+        this.repositorio = new RepositorioArchivo();
+        this.usuarios = new ArrayList<>();
+        cargarUsuarios();
+    }
+
+    public SessionController(boolean usarArchivo) {
+        if (usarArchivo) {
+            this.repositorio = new RepositorioArchivo();
+        } else {
+            this.repositorio = new RepositorioEnMemoria();
+        }
         this.usuarios = new ArrayList<>();
         cargarUsuarios();
     }
 
     private void cargarUsuarios() {
-        this.usuarios = gestorPersistencia.cargarEstadoCompleto();
-
         if (usuarios.isEmpty()) {
             System.out.println("No se encontraron usuarios, creando datos de ejemplo...");
             crearUsuariosEjemplo();
@@ -26,16 +36,14 @@ public class SessionController {
     }
 
     private void crearUsuariosEjemplo() {
-        registrarUsuario("daniel", "1234", "Daniel Lincopi");
-        registrarUsuario("GenosK4", "12345", "Daniel");
+        registrarUsuario("daniel", "1234", "Daniel Lincopi", repositorio);
+        registrarUsuario("GenosK4", "12345", "Daniel", repositorio);
     }
 
-    public boolean registrarUsuario(String username, String password, String nombre) {
+    public boolean registrarUsuario(String username, String password, String nombre, IRepositorioResultados repositorio) {
         if (buscarUsuario(username) != null) return false;
-        Usuario u = new Usuario(username, password, nombre);
+        Usuario u = new Usuario(username, password, nombre, repositorio);
         usuarios.add(u);
-
-        gestorPersistencia.guardarEstadoCompleto(usuarios);
         return true;
     }
 
@@ -49,13 +57,12 @@ public class SessionController {
     }
 
     public void logout() {
-        if (usuarioActual != null) {
-            gestorPersistencia.guardarEstadoCompleto(usuarios);
-        }
         usuarioActual = null;
     }
 
     public Usuario getUsuarioActual() { return usuarioActual; }
+
+    public IRepositorioResultados getRepositorio() { return repositorio; }
 
     public boolean existeUsuario(String username) {
         return buscarUsuario(username) != null;
@@ -66,10 +73,6 @@ public class SessionController {
             if (u.getUsername().equals(username)) return u;
         }
         return null;
-    }
-
-    public void guardarEstado() {
-        gestorPersistencia.guardarEstadoCompleto(usuarios);
     }
 }
 
