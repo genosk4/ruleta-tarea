@@ -6,16 +6,15 @@ import java.util.stream.Collectors;
 
 public class RuletaController {
     private final Ruleta ruleta = new Ruleta();
+    private final GestorPersistencia gestorPersistencia = new GestorPersistencia();
 
     public Resultado procesarApuesta(Usuario usuario, TipoApuesta tipo, int monto) {
-
         ApuestaBase apuesta = crearApuestaDesdeTipo(tipo, monto);
 
         if (usuario.getSaldo() < apuesta.getMonto()) {
             throw new IllegalArgumentException("Saldo insuficiente para realizar la apuesta");
         }
 
-        // Retirar monto del usuario
         if (!usuario.retirar(apuesta.getMonto())) {
             throw new IllegalArgumentException("Error al retirar fondos para la apuesta");
         }
@@ -33,8 +32,9 @@ public class RuletaController {
                 resultadoJuego.isAcierto()
         );
 
-
         usuario.registrarResultado(resultado);
+
+        guardarEstadoActual();
 
         return resultado;
     }
@@ -45,8 +45,19 @@ public class RuletaController {
             case NEGRO: return new ApuestaNegro(monto);
             case PAR: return new ApuestaPar(monto);
             case IMPAR: return new ApuestaImpar(monto);
-            default: throw new IllegalArgumentException("Tipo de apuesta no válido: " + tipo);
+            default: throw new IllegalArgumentException("Tipo de apuesta no valido: " + tipo);
         }
+    }
+
+    private void guardarEstadoActual() {
+        new Thread(() -> {
+            gestorPersistencia.guardarHistorialRuleta();
+            System.out.println("Estado guardado automaticamente");
+        }).start();
+    }
+
+    public void inicializarSistema() {
+        gestorPersistencia.cargarHistorialRuleta();
     }
 
     public String getEstadisticas() {
@@ -79,12 +90,12 @@ public class RuletaController {
                 .mapToInt(r -> r.isAcierto() ? r.getMonto() : -r.getMonto())
                 .sum();
 
-        return "Estadísticas del usuario:\n" +
+        return "Estadisticas del usuario:\n" +
                 "Total de jugadas: " + totalJugadas + "\n" +
                 "Ganadas: " + ganadas + "\n" +
                 "Perdidas: " + perdidas + "\n" +
                 "Total apostado: $" + totalApostado + "\n" +
-                "Ganancia/Pérdida neta: $" + gananciaNeta + "\n" +
+                "Ganancia/Perdida neta: $" + gananciaNeta + "\n" +
                 "Saldo actual: $" + usuario.getSaldo();
     }
 }

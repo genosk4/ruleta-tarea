@@ -18,6 +18,7 @@ public class VentanaMenu {
     private final SessionController sessionController;
     private final RuletaController ruletaController = new RuletaController();
     private final JButton btnEstadisticas = new JButton("Estadísticas");
+    private final JButton btnRespaldo = new JButton("Respaldar Datos");
 
     public VentanaMenu(Usuario usuario, SessionController sessionController) {
         this.usuario = usuario;
@@ -37,6 +38,7 @@ public class VentanaMenu {
         btnPerfil.setBounds(20, 160, 100, 30);
         btnSalir.setBounds(20, 200, 100, 30);
         btnEstadisticas.setBounds(20, 200, 100, 30);
+        btnRespaldo.setBounds(20, 240, 100, 30);
 
         lblSaldo.setBounds(20, 30, 200, 30);
         refrescarSaldo();
@@ -47,6 +49,7 @@ public class VentanaMenu {
         frame.add(btnSalir);
         frame.add(lblSaldo);
         frame.add(btnEstadisticas);
+        frame.add(btnRespaldo);
     }
 
     private void configurarEventos() {
@@ -55,6 +58,7 @@ public class VentanaMenu {
         btnPerfil.addActionListener(e -> mostrarPerfil());
         btnSalir.addActionListener(e -> salir());
         btnEstadisticas.addActionListener(e -> mostrarEstadisticas());
+        btnRespaldo.addActionListener(e -> respaldarDatos());
     }
 
     private void mostrarEstadisticas() {
@@ -103,6 +107,15 @@ public class VentanaMenu {
     }
 
     public void mostrarVentana() { frame.setVisible(true); }
+
+    private void respaldarDatos() {
+        sessionController.guardarEstado();
+        JOptionPane.showMessageDialog(frame,
+                "Datos respaldados exitosamente\n" +
+                        "Ubicacion: carpeta 'data/' en el proyecto",
+                "Respaldo Exitoso",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
 }
 
 
