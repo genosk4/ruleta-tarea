@@ -16,17 +16,20 @@ public class VentanaMenu {
     private final JLabel lblSaldo = new JLabel();
     private final Usuario usuario;
     private final SessionController sessionController;
-    private final RuletaController ruletaController = new RuletaController();
+    private final RuletaController ruletaController;
+    private final JButton btnEstadisticas = new JButton("Estadísticas");
+    private final JButton btnRespaldo = new JButton("Respaldar Datos");
 
-    public VentanaMenu(Usuario usuario, SessionController sessionController) {
+    public VentanaMenu(Usuario usuario, SessionController sessionController, RuletaController ruletaController) {
         this.usuario = usuario;
         this.sessionController = sessionController;
+        this.ruletaController = ruletaController;
         inicializarVentana();
         configurarEventos();
     }
 
     private void inicializarVentana() {
-        frame.setSize(500, 350);
+        frame.setSize(500, 400);
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -34,7 +37,8 @@ public class VentanaMenu {
         btnJugar.setBounds(20, 80, 100, 30);
         btnHistorial.setBounds(20, 120, 100, 30);
         btnPerfil.setBounds(20, 160, 100, 30);
-        btnSalir.setBounds(20, 200, 100, 30);
+        btnEstadisticas.setBounds(20, 200, 100, 30);
+        btnSalir.setBounds(20, 240, 100, 30);
 
         lblSaldo.setBounds(20, 30, 200, 30);
         refrescarSaldo();
@@ -42,8 +46,10 @@ public class VentanaMenu {
         frame.add(btnJugar);
         frame.add(btnHistorial);
         frame.add(btnPerfil);
+        frame.add(btnEstadisticas);
         frame.add(btnSalir);
         frame.add(lblSaldo);
+
     }
 
     private void configurarEventos() {
@@ -51,11 +57,17 @@ public class VentanaMenu {
         btnHistorial.addActionListener(e -> mostrarHistorial());
         btnPerfil.addActionListener(e -> mostrarPerfil());
         btnSalir.addActionListener(e -> salir());
+        btnEstadisticas.addActionListener(e -> mostrarEstadisticas());
+
+    }
+
+    private void mostrarEstadisticas() {
+        new VentanaEstadisticas(usuario).setVisible(true);
     }
 
     private void abrirJuego() {
         frame.dispose();
-        new VentanaRuleta(usuario).setVisible(true);
+        new VentanaRuleta(usuario, ruletaController, sessionController).setVisible(true);
     }
 
     private void refrescarSaldo() {
@@ -95,6 +107,8 @@ public class VentanaMenu {
     }
 
     public void mostrarVentana() { frame.setVisible(true); }
+
+
 }
 
 
