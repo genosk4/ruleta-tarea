@@ -39,7 +39,7 @@ public class VentanaMenu {
         btnPerfil.setBounds(20, 160, 100, 30);
         btnEstadisticas.setBounds(20, 200, 100, 30);
         btnSalir.setBounds(20, 240, 100, 30);
-        btnRespaldo.setBounds(20, 280, 100, 30);
+
         lblSaldo.setBounds(20, 30, 200, 30);
         refrescarSaldo();
 
@@ -49,7 +49,7 @@ public class VentanaMenu {
         frame.add(btnEstadisticas);
         frame.add(btnSalir);
         frame.add(lblSaldo);
-        frame.add(btnRespaldo);
+
     }
 
     private void configurarEventos() {
@@ -58,7 +58,7 @@ public class VentanaMenu {
         btnPerfil.addActionListener(e -> mostrarPerfil());
         btnSalir.addActionListener(e -> salir());
         btnEstadisticas.addActionListener(e -> mostrarEstadisticas());
-        btnRespaldo.addActionListener(e -> respaldarDatos());
+
     }
 
     private void mostrarEstadisticas() {
@@ -108,14 +108,7 @@ public class VentanaMenu {
 
     public void mostrarVentana() { frame.setVisible(true); }
 
-    private void respaldarDatos() {
 
-        JOptionPane.showMessageDialog(frame,
-                "Datos respaldados exitosamente\n" +
-                        "Ubicacion: carpeta 'data/' en el proyecto",
-                "Respaldo Exitoso",
-                JOptionPane.INFORMATION_MESSAGE);
-    }
 }
 
 

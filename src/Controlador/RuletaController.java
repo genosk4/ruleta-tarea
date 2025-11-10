@@ -40,6 +40,7 @@ public class RuletaController {
 
         usuario.registrarResultado(resultado);
 
+
         return resultado;
     }
 

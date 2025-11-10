@@ -90,13 +90,5 @@ public class Estadisticas {
     public int getRachaMaxima() { return rachaMaxima; }
     public String getTipoMasJugado() { return tipoMasJugado; }
 
-    public void reiniciarEstadisticas() {
-        totalJugadas = 0;
-        victorias = 0;
-        porcentajeVictorias = 0;
-        rachaMaxima = 0;
-        rachaActual = 0;
-        resultados.clear();
-        inicializarContadorTipos();
-    }
+
 }

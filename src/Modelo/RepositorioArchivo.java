@@ -23,6 +23,64 @@ public class RepositorioArchivo implements IRepositorioResultados {
         }
     }
 
+    public void guardarUsuarios(List<Usuario> usuarios) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(ARCHIVO_USUARIOS))) {
+            writer.println("username,password,nombre,saldo");
+
+            for (Usuario usuario : usuarios) {
+                writer.println(String.format("%s,%s,%s,%d",
+                        usuario.getUsername(),
+                        "protected",
+                        usuario.getNombre(),
+                        usuario.getSaldo()
+                ));
+            }
+            System.out.println("Usuarios guardados: " + usuarios.size());
+
+        } catch (IOException e) {
+            System.err.println("Error guardando usuarios: " + e.getMessage());
+        }
+    }
+
+    public List<Usuario> cargarUsuarios() {
+        List<Usuario> usuarios = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO_USUARIOS))) {
+            String linea;
+            boolean primeraLinea = true;
+
+            while ((linea = reader.readLine()) != null) {
+                if (primeraLinea) {
+                    primeraLinea = false;
+                    continue;
+                }
+
+                String[] campos = linea.split(",");
+                if (campos.length >= 4) {
+                    String username = campos[0];
+                    String nombre = campos[2];
+                    int saldo = Integer.parseInt(campos[3]);
+
+                    Usuario usuario = new Usuario(username, "1234", nombre, this);
+                    usuario.depositar(saldo);
+                    usuarios.add(usuario);
+                }
+            }
+            System.out.println("Usuarios cargados: " + usuarios.size());
+
+        } catch (FileNotFoundException e) {
+            System.out.println("No existe archivo de usuarios previo");
+        } catch (IOException e) {
+            System.err.println("Error cargando usuarios: " + e.getMessage());
+        }
+
+        return usuarios;
+    }
+
+    public void guardarEstadoCompleto(List<Usuario> usuarios) {
+        guardarUsuarios(usuarios);
+        System.out.println("Estado completo guardado");
+    }
     private void cargarDesdeArchivo() {
         try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO_RESULTADOS))) {
             String linea;

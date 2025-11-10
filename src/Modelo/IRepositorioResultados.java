@@ -17,4 +17,10 @@ public interface IRepositorioResultados {
 
 	void limpiar();
 
+    void guardarUsuarios(List<Usuario> usuarios);
+
+    List<Usuario> cargarUsuarios();
+
+    void guardarEstadoCompleto(List<Usuario> usuarios);
+
 }

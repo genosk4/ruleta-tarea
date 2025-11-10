@@ -17,17 +17,10 @@ public class Usuario {
         this.username = username;
         this.password = password;
         setNombre(nombre);
-        this.saldo = 1000;
-        this.estadisticas = new Estadisticas(this, repositorio);
-    }
-
-    public Usuario(IRepositorioResultados repositorio) {
-        this.username = "daniel";
-        this.password = "1234";
-        this.nombre = "Daniel";
         this.saldo = 0;
         this.estadisticas = new Estadisticas(this, repositorio);
     }
+
 
     public String getUsername() { return username; }
     public String getNombre() { return nombre; }

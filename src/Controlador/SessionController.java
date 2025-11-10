@@ -13,26 +13,35 @@ public class SessionController {
     private final IRepositorioResultados repositorio;
 
     public SessionController(boolean usarArchivo) {
-        if (usarArchivo) {
-            this.repositorio = new RepositorioArchivo();
+        this.repositorio = usarArchivo ? new RepositorioArchivo() : new RepositorioEnMemoria();
+
+        this.usuarios = repositorio.cargarUsuarios();
+
+        if (usuarios.isEmpty()) {
+            System.out.println("No se encontraron usuarios, creando datos de ejemplo...");
+            crearUsuariosEjemplo();
         } else {
-            this.repositorio = new RepositorioEnMemoria();
+            System.out.println("Usuarios cargados exitosamente: " + usuarios.size());
         }
-        this.usuarios = new ArrayList<>();
-        crearUsuariosEjemplo();
     }
 
     private void crearUsuariosEjemplo() {
         registrarUsuario("daniel", "1234", "Daniel Lincopi");
-        registrarUsuario("GenosK4", "12345", "Daniel");
     }
 
     public boolean registrarUsuario(String username, String password, String nombre) {
         if (buscarUsuario(username) != null) return false;
         Usuario u = new Usuario(username, password, nombre, repositorio);
         usuarios.add(u);
+        repositorio.guardarUsuarios(usuarios);
         return true;
     }
+
+    public void guardarEstado() {
+        repositorio.guardarEstadoCompleto(usuarios);
+        System.out.println("Estado del sistema guardado");
+    }
+
 
     public boolean login(String username, String password) {
         Usuario u = buscarUsuario(username);
