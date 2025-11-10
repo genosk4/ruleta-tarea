@@ -1,5 +1,6 @@
 package Vista;
 
+import Controlador.RuletaController;
 import Controlador.SessionController;
 import Modelo.Usuario;
 
@@ -65,7 +66,8 @@ public class VentanaLogin {
                     JOptionPane.INFORMATION_MESSAGE);
 
             frame.dispose();
-            new VentanaMenu(u, sessionController).mostrarVentana();
+            RuletaController ruletaController = new RuletaController(sessionController.getRepositorio());
+            new VentanaMenu(u, sessionController, ruletaController).mostrarVentana();
         } else {
             JOptionPane.showMessageDialog(frame,
                     "Usuario o clave incorrectos",

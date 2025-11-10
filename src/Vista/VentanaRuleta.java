@@ -1,6 +1,7 @@
 package Vista;
 
 import Controlador.RuletaController;
+import Controlador.SessionController;
 import Modelo.Resultado;
 import Modelo.TipoApuesta;
 import Modelo.Usuario;
@@ -16,10 +17,12 @@ public class VentanaRuleta extends JFrame {
 
     private final Usuario usuario;
     private final RuletaController ruletaController;
+    private final SessionController sessionController;
 
-    public VentanaRuleta(Usuario usuario, RuletaController ruletaController) {
+    public VentanaRuleta(Usuario usuario, RuletaController ruletaController, SessionController sessionController) {
         this.usuario = usuario;
         this.ruletaController = ruletaController;
+        this.sessionController = sessionController;
         inicializarVentana();
     }
 
@@ -150,7 +153,7 @@ public class VentanaRuleta extends JFrame {
 
         if (opcion == JOptionPane.YES_OPTION) {
             this.dispose();
-            new VentanaMenu(usuario, new Controlador.SessionController()).mostrarVentana();
+            new VentanaMenu(usuario, sessionController, ruletaController).mostrarVentana();
         }
     }
 }

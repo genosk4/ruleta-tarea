@@ -3,19 +3,13 @@ package Modelo;
 import java.util.Random;
 
 public class Ruleta {
-    private int saldo;
     private static final int MAX_HISTORIAL = 100;
 
     private final IRepositorioResultados repositorio;
     private static final Random rng = new Random();
 
-    public Ruleta(int saldoInicial, IRepositorioResultados repositorio) {
-        this.saldo = Math.max(saldoInicial, 0);
-        this.repositorio = repositorio;
-    }
-
     public Ruleta(IRepositorioResultados repositorio) {
-        this(0, repositorio);
+        this.repositorio = repositorio;
     }
 
     public int girarRuleta() {
@@ -23,18 +17,9 @@ public class Ruleta {
     }
 
     public ResultadoJuego jugar(ApuestaBase apuesta) {
-        if (apuesta.getMonto() > saldo) {
-            throw new IllegalArgumentException("Saldo insuficiente");
-        }
 
         int numeroGanador = girarRuleta();
         boolean acierto = apuesta.acierta(numeroGanador);
-
-        if (acierto) {
-            saldo += apuesta.getMonto();
-        } else {
-            saldo -= apuesta.getMonto();
-        }
 
         ResultadoJuego resultado = new ResultadoJuego(numeroGanador, acierto, apuesta);
 
@@ -67,8 +52,6 @@ public class Ruleta {
                 .mapToInt(ResultadoJuego::getMontoApostado)
                 .sum();
     }
-
-    public int getSaldo() { return saldo; }
 
     public IRepositorioResultados getRepositorio() { return repositorio; }
 }

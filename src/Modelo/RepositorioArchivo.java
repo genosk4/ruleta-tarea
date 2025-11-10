@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class RepositorioArchivo implements IRepositorioResultados {
     private static final String ARCHIVO_RESULTADOS = "data/resultados_ruleta.csv";
+    private static final String ARCHIVO_USUARIOS = "data/usuarios.csv";
     private final List<ResultadoJuego> cache;
 
     public RepositorioArchivo() {

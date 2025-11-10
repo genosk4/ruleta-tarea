@@ -2,20 +2,19 @@ package Modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class RepositorioEnMemoria {
+public class RepositorioEnMemoria implements IRepositorioResultados {
+    private final List<ResultadoJuego> resultados;
 
-	private List<ResultadoJuego> resultados;
-
-	public RepositorioEnMemoria() {
-		this.resultados = new ArrayList<>();
-	}
+    public RepositorioEnMemoria() {
+        this.resultados = new ArrayList<>();
+    }
 
     @Override
-	public void guardarResultado(ResultadoJuego resultado) {
-
-		resultados.add(resultado);
-	}
+    public void guardarResultado(ResultadoJuego resultado) {
+        resultados.add(resultado);
+    }
 
     @Override
     public List<ResultadoJuego> obtenerTodos() {
@@ -45,5 +44,4 @@ public class RepositorioEnMemoria {
     public void limpiar() {
         resultados.clear();
     }
-
 }

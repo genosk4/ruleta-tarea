@@ -12,12 +12,6 @@ public class SessionController {
     private Usuario usuarioActual;
     private final IRepositorioResultados repositorio;
 
-    public SessionController() {
-        this.repositorio = new RepositorioArchivo();
-        this.usuarios = new ArrayList<>();
-        cargarUsuarios();
-    }
-
     public SessionController(boolean usarArchivo) {
         if (usarArchivo) {
             this.repositorio = new RepositorioArchivo();
@@ -25,22 +19,15 @@ public class SessionController {
             this.repositorio = new RepositorioEnMemoria();
         }
         this.usuarios = new ArrayList<>();
-        cargarUsuarios();
-    }
-
-    private void cargarUsuarios() {
-        if (usuarios.isEmpty()) {
-            System.out.println("No se encontraron usuarios, creando datos de ejemplo...");
-            crearUsuariosEjemplo();
-        }
+        crearUsuariosEjemplo();
     }
 
     private void crearUsuariosEjemplo() {
-        registrarUsuario("daniel", "1234", "Daniel Lincopi", repositorio);
-        registrarUsuario("GenosK4", "12345", "Daniel", repositorio);
+        registrarUsuario("daniel", "1234", "Daniel Lincopi");
+        registrarUsuario("GenosK4", "12345", "Daniel");
     }
 
-    public boolean registrarUsuario(String username, String password, String nombre, IRepositorioResultados repositorio) {
+    public boolean registrarUsuario(String username, String password, String nombre) {
         if (buscarUsuario(username) != null) return false;
         Usuario u = new Usuario(username, password, nombre, repositorio);
         usuarios.add(u);
@@ -61,7 +48,6 @@ public class SessionController {
     }
 
     public Usuario getUsuarioActual() { return usuarioActual; }
-
     public IRepositorioResultados getRepositorio() { return repositorio; }
 
     public boolean existeUsuario(String username) {

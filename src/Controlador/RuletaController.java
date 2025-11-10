@@ -14,9 +14,6 @@ public class RuletaController {
     }
 
     public Resultado procesarApuesta(Usuario usuario, TipoApuesta tipo, int monto) {
-        if (ruleta == null) {
-            this.ruleta = new Ruleta(usuario.getSaldo(), repositorio);
-        }
 
         ApuestaBase apuesta = crearApuestaDesdeTipo(tipo, monto);
 
@@ -55,6 +52,7 @@ public class RuletaController {
             default: throw new IllegalArgumentException("Tipo de apuesta no valido: " + tipo);
         }
     }
+
 
     public String getEstadisticas() {
         return Ruleta.getEstadisticas(repositorio);
