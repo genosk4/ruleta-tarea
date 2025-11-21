@@ -46,7 +46,6 @@ public class VentanaRuleta extends JFrame {
         JButton btnEstadisticas = new JButton("Ver estadísticas");
         btnEstadisticas.setBounds(200, 60, 150, 25);
 
-        // NUEVO BOTÓN: Volver al menú principal
         JButton btnVolver = new JButton("Volver al Menú");
         btnVolver.setBounds(370, 20, 150, 25);
 
@@ -79,21 +78,16 @@ public class VentanaRuleta extends JFrame {
 
 
         if (montoTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese un monto.");
+            JOptionPane.showMessageDialog(this, "Ingrese un monto.", "Error de validación", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
 
-        boolean esNumero = true;
-        for (char c : montoTexto.toCharArray()) {
-            if (!Character.isDigit(c)) {
-                esNumero = false;
-                break;
-            }
-        }
-
-        if (!esNumero) {
-            JOptionPane.showMessageDialog(this, "Ingrese un monto válido (solo números).");
+        if (!montoTexto.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this,
+                    "El monto debe contener solo números.",
+                    "Error de validación",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 

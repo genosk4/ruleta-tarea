@@ -15,6 +15,10 @@ public class RuletaController {
 
     public Resultado procesarApuesta(Usuario usuario, TipoApuesta tipo, int monto) {
 
+        if (usuario == null) {
+            throw new IllegalStateException("No hay usuario autenticado para realizar la apuesta");
+        }
+
         ApuestaBase apuesta = crearApuestaDesdeTipo(tipo, monto);
 
         if (usuario.getSaldo() < apuesta.getMonto()) {
@@ -25,23 +29,29 @@ public class RuletaController {
             throw new IllegalArgumentException("Error al retirar fondos para la apuesta");
         }
 
-        ResultadoJuego resultadoJuego = ruleta.jugar(apuesta);
+        try {
 
-        if (resultadoJuego.isAcierto()) {
-            usuario.depositar(resultadoJuego.getGanancia());
+            ResultadoJuego resultadoJuego = ruleta.jugar(apuesta);
+
+            if (resultadoJuego.isAcierto()) {
+                usuario.depositar(resultadoJuego.getGanancia());
+            }
+
+            Resultado resultado = new Resultado(
+                    resultadoJuego.getNumeroGanador(),
+                    tipo,
+                    monto,
+                    resultadoJuego.isAcierto()
+            );
+
+            usuario.registrarResultado(resultado);
+
+
+            return resultado;
+        }catch (Exception e) {
+            usuario.depositar(monto);
+            throw new RuntimeException("Error excepcional durante el juego: " + e.getMessage(), e);
         }
-
-        Resultado resultado = new Resultado(
-                resultadoJuego.getNumeroGanador(),
-                tipo,
-                monto,
-                resultadoJuego.isAcierto()
-        );
-
-        usuario.registrarResultado(resultado);
-
-
-        return resultado;
     }
 
     private ApuestaBase crearApuestaDesdeTipo(TipoApuesta tipo, int monto) {

@@ -85,9 +85,26 @@ public class VentanaMenu {
     }
 
     private void mostrarPerfil() {
-        String nuevoNombre = JOptionPane.showInputDialog(frame, "Nombre actual: " + usuario.getNombre() + "\nIngrese nuevo nombre:", usuario.getNombre());
-        if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) usuario.setNombre(nuevoNombre);
 
+        if (usuario == null) {
+            JOptionPane.showMessageDialog(frame,
+                    "No hay usuario autenticado",
+                    "Error de sesión",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String nuevoNombre = JOptionPane.showInputDialog(frame, "Nombre actual: " + usuario.getNombre() + "\nIngrese nuevo nombre:", usuario.getNombre());
+        if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+            if (nuevoNombre.trim().length() < 2) {
+                JOptionPane.showMessageDialog(frame,
+                        "El nombre debe tener al menos 2 caracteres",
+                        "Error de validación",
+                        JOptionPane.WARNING_MESSAGE);
+            } else {
+                usuario.setNombre(nuevoNombre.trim());
+            }
+        }
         JOptionPane.showMessageDialog(frame,
                 "Usuario: " + usuario.getUsername() + "\nNombre: " + usuario.getNombre() + "\nSaldo: $" + ruletaController.getSaldo(usuario),
                 "Perfil", JOptionPane.INFORMATION_MESSAGE);
@@ -96,12 +113,49 @@ public class VentanaMenu {
         if (opcion == JOptionPane.YES_OPTION) {
             String montoStr = JOptionPane.showInputDialog(frame, "Ingrese monto a recargar:");
             try {
+                if (montoStr == null || montoStr.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Debe ingresar un monto",
+                            "Error de validación",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                if (!montoStr.matches("\\d+")) {
+                    JOptionPane.showMessageDialog(frame,
+                            "El monto debe contener solo números",
+                            "Error de validación",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 int monto = Integer.parseInt(montoStr);
+
+                if (monto <= 0) {
+                    JOptionPane.showMessageDialog(frame,
+                            "El monto debe ser mayor a 0",
+                            "Error de validación",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 ruletaController.depositar(usuario, monto);
                 refrescarSaldo();
-            }
-            catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(frame, "Monto inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame,
+                        "Saldo recargado exitosamente",
+                        "Recarga exitosa",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame,
+                        "Monto inválido: " + ex.getMessage(),
+                        "Error de validación",
+                        JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame,
+                        "Error excepcional al recargar saldo: " + ex.getMessage(),
+                        "Error del sistema",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }

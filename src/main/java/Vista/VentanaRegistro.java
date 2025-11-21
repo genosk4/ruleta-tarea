@@ -59,7 +59,34 @@ public class VentanaRegistro {
         String nombre = txtNombre.getText().trim();
 
         if (usuario.isEmpty() || clave.isEmpty() || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "Debe completar todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame,
+                    "Todos los campos son obligatorios",
+                    "Error de validación",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (usuario.length() < 3) {
+            JOptionPane.showMessageDialog(frame,
+                    "El usuario debe tener al menos 3 caracteres",
+                    "Error de validación",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (clave.length() < 4) {
+            JOptionPane.showMessageDialog(frame,
+                    "La clave debe tener al menos 4 caracteres",
+                    "Error de validación",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (nombre.length() < 2) {
+            JOptionPane.showMessageDialog(frame,
+                    "El nombre debe tener al menos 2 caracteres",
+                    "Error de validación",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 

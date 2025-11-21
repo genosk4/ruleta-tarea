@@ -38,7 +38,7 @@ public class RepositorioArchivo implements IRepositorioResultados {
             System.out.println("Usuarios guardados: " + usuarios.size());
 
         } catch (IOException e) {
-            System.err.println("Error guardando usuarios: " + e.getMessage());
+            throw new RuntimeException("Error excepcional al guardar usuarios: " + e.getMessage(), e);
         }
     }
 
@@ -71,7 +71,9 @@ public class RepositorioArchivo implements IRepositorioResultados {
         } catch (FileNotFoundException e) {
             System.out.println("No existe archivo de usuarios previo");
         } catch (IOException e) {
-            System.err.println("Error cargando usuarios: " + e.getMessage());
+            throw new RuntimeException("Error excepcional al cargar usuarios: " + e.getMessage(), e);
+        }  catch (NumberFormatException e) {
+            throw new RuntimeException("Error en formato de datos de usuarios: " + e.getMessage(), e);
         }
 
         return usuarios;

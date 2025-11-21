@@ -17,14 +17,14 @@ public class SessionController {
 
         this.usuarios = repositorio.cargarUsuarios();
 
-        /**
-         * if (usuarios.isEmpty()) {
+
+          if (usuarios.isEmpty()) {
             System.out.println("No se encontraron usuarios, creando datos de ejemplo...");
             crearUsuariosEjemplo();
         } else {
             System.out.println("Usuarios cargados exitosamente: " + usuarios.size());
         }
-         */
+
     }
 
     private void crearUsuariosEjemplo() {

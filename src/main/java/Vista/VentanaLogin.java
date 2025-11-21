@@ -57,6 +57,21 @@ public class VentanaLogin {
         String usuario = txtUsuario.getText();
         String clave = new String(txtClave.getPassword());
 
+        if (usuario.isEmpty() || clave.isEmpty()) {
+            JOptionPane.showMessageDialog(frame,
+                    "Usuario y clave son obligatorios",
+                    "Error de validación",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (usuario.length() < 3) {
+            JOptionPane.showMessageDialog(frame,
+                    "El usuario debe tener al menos 3 caracteres",
+                    "Error de validación",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         if (sessionController.login(usuario, clave)) {
             Usuario u = sessionController.getUsuarioActual();
@@ -71,7 +86,7 @@ public class VentanaLogin {
         } else {
             JOptionPane.showMessageDialog(frame,
                     "Usuario o clave incorrectos",
-                    "Error",
+                    "Error de autenticación",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
