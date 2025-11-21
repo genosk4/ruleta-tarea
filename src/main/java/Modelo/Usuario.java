@@ -31,6 +31,10 @@ public class Usuario {
     }
     public int getSaldo() { return saldo; }
 
+    public String getPassword() {
+        return this.password;
+    }
+
     public void depositar(int monto) {
         if (monto > 0) saldo += monto;
     }

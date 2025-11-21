@@ -19,16 +19,11 @@ public class SessionController {
 
 
           if (usuarios.isEmpty()) {
-            System.out.println("No se encontraron usuarios, creando datos de ejemplo...");
-            crearUsuariosEjemplo();
+            System.out.println("No se encontraron usuarios");
         } else {
             System.out.println("Usuarios cargados exitosamente: " + usuarios.size());
         }
 
-    }
-
-    private void crearUsuariosEjemplo() {
-        registrarUsuario("daniel", "1234", "Daniel Lincopi");
     }
 
     public boolean registrarUsuario(String username, String password, String nombre) {
@@ -40,8 +35,18 @@ public class SessionController {
     }
 
     public void guardarEstado() {
-        repositorio.guardarEstadoCompleto(usuarios);
-        System.out.println("Estado del sistema guardado");
+        if (usuarios == null || usuarios.isEmpty()) {
+            System.out.println("No hay usuarios para guardar");
+            return;
+        }
+
+        try {
+            repositorio.guardarEstadoCompleto(usuarios);
+            System.out.println("Estado del sistema guardado exitosamente");
+        } catch (RuntimeException e) {
+            System.err.println("Error excepcional al guardar estado: " + e.getMessage());
+            throw e;
+        }
     }
 
 

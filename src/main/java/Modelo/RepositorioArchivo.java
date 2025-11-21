@@ -30,7 +30,7 @@ public class RepositorioArchivo implements IRepositorioResultados {
             for (Usuario usuario : usuarios) {
                 writer.println(String.format("%s,%s,%s,%d",
                         usuario.getUsername(),
-                        "protected",
+                        usuario.getPassword(),
                         usuario.getNombre(),
                         usuario.getSaldo()
                 ));
@@ -58,10 +58,11 @@ public class RepositorioArchivo implements IRepositorioResultados {
                 String[] campos = linea.split(",");
                 if (campos.length >= 4) {
                     String username = campos[0];
+                    String password = campos[1];
                     String nombre = campos[2];
                     int saldo = Integer.parseInt(campos[3]);
 
-                    Usuario usuario = new Usuario(username, "1234", nombre, this);
+                    Usuario usuario = new Usuario(username, password, nombre, this);
                     usuario.depositar(saldo);
                     usuarios.add(usuario);
                 }
@@ -69,10 +70,10 @@ public class RepositorioArchivo implements IRepositorioResultados {
             System.out.println("Usuarios cargados: " + usuarios.size());
 
         } catch (FileNotFoundException e) {
-            System.out.println("No existe archivo de usuarios previo");
+            System.out.println("No existe archivo de usuarios previo, se creará uno nuevo");
         } catch (IOException e) {
             throw new RuntimeException("Error excepcional al cargar usuarios: " + e.getMessage(), e);
-        }  catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new RuntimeException("Error en formato de datos de usuarios: " + e.getMessage(), e);
         }
 
